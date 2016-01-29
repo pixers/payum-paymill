@@ -22,6 +22,9 @@ class PaymillGatewayFactory extends GatewayFactory
             'payum.factory_name' => 'paymill',
             'payum.factory_title' => 'Paymill',
             'payum.action.capture' => new CaptureAction(),
+            'payum.action.authorize' => new AuthorizeAction(),
+            'payum.action.refund' => new RefundAction(),
+            'payum.action.cancel' => new CancelAction(),
             'payum.action.notify' => new NotifyAction(),
             'payum.action.status' => new StatusAction(),
             'payum.action.convert_payment' => new ConvertPaymentAction(),
@@ -29,6 +32,10 @@ class PaymillGatewayFactory extends GatewayFactory
 
         if (false == $config['payum.api']) {
             $config['payum.default_options'] = array(
+                'api_private_key' => '',
+                'api_public_key' => '',
+                'test_private_key' => '',
+                'test_public_key' => '',
                 'sandbox' => true,
             );
             $config->defaults($config['payum.default_options']);
