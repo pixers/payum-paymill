@@ -2,13 +2,13 @@
 namespace Payum\Paymill;
 
 use GuzzleHttp\Psr7\Request;
+use Paymill\API\CommunicationAbstract;
 use Payum\Core\Bridge\Guzzle\HttpClientFactory;
 use Payum\Core\Bridge\Spl\ArrayObject;
-use Payum\Core\Exception\Http\HttpException;
 use Payum\Core\Exception\LogicException;
 use Payum\Core\HttpClientInterface;
 
-class Api
+class Api extends CommunicationAbstract
 {
     const API_URL = 'https://api.paymill.com/v2.1/';
 
@@ -64,30 +64,55 @@ class Api
     }
 
     /**
-     * @param array $fields
+     * Perform HTTP request to REST endpoint
      *
+     * @param string $action
+     * @param array $params
+     * @param string $method
      * @return array
      */
-    protected function doRequest($method, array $fields)
+    public function requestApi($action = '', $params = array(), $method = 'POST')
     {
         $headers = [];
+        $request = new Request($method, $this->getApiEndpoint($action), $headers, http_build_query($params));
 
-        $request = new Request($method, $this->getApiEndpoint(), $headers, http_build_query($fields));
+        $options = [
+            'auth' => [
+                $this->getPrivateKey(), ''
+            ],
+        ];
+        $response = $this->client->send($request, $options);
 
-        $response = $this->client->send($request);
+        $content = $response->getBody();
+        $type = $response->getHeaderLine('Content-Type');
 
         if (false == ($response->getStatusCode() >= 200 && $response->getStatusCode() < 300)) {
-            throw HttpException::factory($request, $response);
+            $content = ['error' => $response->getReasonPhrase()];
         }
 
-        return $response;
+        if ('application/json' === $type) {
+            $content = json_decode($content, true);
+        } elseif ((false !== strpos(strtolower($type), 'text/csv')) && !isset($content['error'])) {
+            return $content;
+        }
+
+        return [
+            'header' => [
+                'status' => $response->getStatusCode(),
+                'reason' => null,
+            ],
+            'body' => $content,
+        ];
     }
 
+
     /**
+     * @param $action
+     *
      * @return string
      */
-    protected function getApiEndpoint()
+    protected function getApiEndpoint($action)
     {
-        return self::API_URL;
+        return self::API_URL . $action;
     }
 }
