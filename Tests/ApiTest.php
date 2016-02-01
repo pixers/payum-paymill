@@ -1,6 +1,7 @@
 <?php
 namespace Payum\Paymill\Tests;
 
+use Paymill\API\CommunicationAbstract;
 use Payum\Paymill\Api;
 use Payum\Core\HttpClientInterface;
 
@@ -38,6 +39,16 @@ class ApiTest extends \PHPUnit_Framework_TestCase
         ], $client);
 
         $this->assertAttributeSame($client, 'client', $api);
+    }
+
+    /**
+     * @test
+     */
+    public function shouldImplementCommunicationAbstract()
+    {
+        $rc = new \ReflectionClass(Api::class);
+
+        $this->assertTrue($rc->isSubclassOf(CommunicationAbstract::class));
     }
 
     /**

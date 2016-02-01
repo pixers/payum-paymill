@@ -1,8 +1,10 @@
 <?php
 namespace Payum\Paymill\Tests;
 
-use Payum\Paymill\PaymillGatewayFactory;
+use Payum\Core\CoreGatewayFactory;
+use Payum\Core\GatewayFactoryInterface;
 use Payum\Core\GatewayFactory;
+use Payum\Paymill\PaymillGatewayFactory;
 
 class PaymillGatewayFactoryTest extends \PHPUnit_Framework_TestCase
 {
@@ -22,6 +24,82 @@ class PaymillGatewayFactoryTest extends \PHPUnit_Framework_TestCase
     public function couldBeConstructedWithoutAnyArguments()
     {
         new PaymillGatewayFactory();
+    }
+
+    /**
+     * @test
+     */
+    public function shouldCreateCoreGatewayFactoryIfNotPassed()
+    {
+        $factory = new PaymillGatewayFactory();
+
+        $this->assertAttributeInstanceOf(CoreGatewayFactory::class, 'coreGatewayFactory', $factory);
+    }
+
+    /**
+     * @test
+     */
+    public function shouldUseCoreGatewayFactoryPassedAsSecondArgument()
+    {
+        $coreGatewayFactory = $this->getMock(GatewayFactoryInterface::class);
+
+        $factory = new PaymillGatewayFactory(array(), $coreGatewayFactory);
+
+        $this->assertAttributeSame($coreGatewayFactory, 'coreGatewayFactory', $factory);
+    }
+
+    /**
+     * @test
+     */
+    public function shouldAllowCreateGateway()
+    {
+        $factory = new PaymillGatewayFactory();
+
+        $gateway = $factory->create([
+            'api_private_key' => 'ApiPrivate',
+            'api_public_key' => 'ApiPublic',
+            'test_private_key' => 'TestPrivate',
+            'test_public_key' => 'TestPublic',
+        ]);
+
+        $this->assertInstanceOf('Payum\Core\Gateway', $gateway);
+
+        $this->assertAttributeNotEmpty('apis', $gateway);
+        $this->assertAttributeNotEmpty('actions', $gateway);
+
+        $extensions = $this->readAttribute($gateway, 'extensions');
+        $this->assertAttributeNotEmpty('extensions', $extensions);
+    }
+
+    /**
+     * @test
+     */
+    public function shouldAllowCreateGatewayWithCustomApi()
+    {
+        $factory = new PaymillGatewayFactory();
+
+        $gateway = $factory->create(array('payum.api' => new \stdClass()));
+
+        $this->assertInstanceOf('Payum\Core\Gateway', $gateway);
+
+        $this->assertAttributeNotEmpty('apis', $gateway);
+        $this->assertAttributeNotEmpty('actions', $gateway);
+
+        $extensions = $this->readAttribute($gateway, 'extensions');
+        $this->assertAttributeNotEmpty('extensions', $extensions);
+    }
+
+    /**
+     * @test
+     */
+    public function shouldAllowCreateGatewayConfig()
+    {
+        $factory = new PaymillGatewayFactory();
+
+        $config = $factory->createConfig();
+
+        $this->assertInternalType('array', $config);
+        $this->assertNotEmpty($config);
     }
 
     /**

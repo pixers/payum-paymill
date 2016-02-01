@@ -63,4 +63,29 @@ class ConvertPaymentActionTest extends GenericActionTest
         $this->assertArrayHasKey('currency', $details);
         $this->assertEquals('EUR', $details['currency']);
     }
+
+    /**
+     * @test
+     */
+    public function shouldNotOverwriteAlreadySetExtraDetails()
+    {
+        $payment = new Payment();
+        $payment->setCurrencyCode('USD');
+        $payment->setTotalAmount(123);
+        $payment->setDescription('the description');
+        $payment->setDetails(array(
+            'foo' => 'fooVal',
+        ));
+
+        $action = new ConvertPaymentAction();
+
+        $action->execute($convert = new Convert($payment, 'array'));
+
+        $details = $convert->getResult();
+
+        $this->assertNotEmpty($details);
+
+        $this->assertArrayHasKey('foo', $details);
+        $this->assertEquals('fooVal', $details['foo']);
+    }
 }
