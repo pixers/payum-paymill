@@ -39,7 +39,7 @@ class Api extends CommunicationAbstract
     {
         $options = ArrayObject::ensureArrayObject($options);
 
-        $options->validateNotEmpty([
+        $options->validatedKeysSet([
             'api_private_key',
             'api_public_key',
             'test_private_key',

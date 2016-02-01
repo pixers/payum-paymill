@@ -5,6 +5,7 @@ use Payum\Core\Action\GatewayAwareAction;
 use Payum\Core\Bridge\Spl\ArrayObject;
 use Payum\Core\Request\Capture;
 use Payum\Core\Exception\RequestNotSupportedException;
+use Payum\Paymill\Request\Transaction;
 
 class CaptureAction extends GatewayAwareAction
 {
@@ -17,9 +18,11 @@ class CaptureAction extends GatewayAwareAction
     {
         RequestNotSupportedException::assertSupports($this, $request);
 
-        $model = ArrayObject::ensureArrayObject($request->getModel());
+        $details = ArrayObject::ensureArrayObject($request->getModel());
 
-        throw new \LogicException('Not implemented');
+        if (!isset($details['http_status_code'])) {
+            $this->gateway->execute(new Transaction($details));
+        }
     }
 
     /**

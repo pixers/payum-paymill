@@ -17,9 +17,52 @@ class StatusAction implements ActionInterface
     {
         RequestNotSupportedException::assertSupports($this, $request);
 
-        $model = ArrayObject::ensureArrayObject($request->getModel());
+        $details = ArrayObject::ensureArrayObject($request->getModel());
 
-        throw new \LogicException('Not implemented');
+        if (!isset($details['http_status_code'])) {
+            $request->markNew();
+            return;
+        }
+
+        // HTTP status
+        if (200 != $details['http_status_code'] || !isset($details['transaction'])) {
+            $request->markFailed();
+            return;
+        }
+
+        // Response code
+        $code = $details['transaction']['response_code'];
+
+        if (10002 == $code) {
+            $request->markPending();
+            return;
+        } elseif (20000 != $code) {
+            $request->markFailed();
+            return;
+        }
+
+        // Status of transaction
+        $status = $details['transaction']['status'];
+        switch ($status) {
+            case 'open':
+            case 'pending':
+            case 'preauthorize':
+                $request->markPending();
+                break;
+            case 'close':
+                $request->markCaptured();
+                break;
+            case 'failed':
+                $request->markFailed();
+                break;
+            case 'refunded':
+            case 'chargeback':
+                $request->markRefunded();
+                break;
+            default:
+                $request->markUnknown();
+                break;
+        }
     }
 
     /**

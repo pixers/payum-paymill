@@ -1,15 +1,12 @@
 <?php
 namespace Payum\Paymill;
 
-use Payum\Paymill\Action\AuthorizeAction;
-use Payum\Paymill\Action\CancelAction;
-use Payum\Paymill\Action\ConvertPaymentAction;
-use Payum\Paymill\Action\CaptureAction;
-use Payum\Paymill\Action\NotifyAction;
-use Payum\Paymill\Action\RefundAction;
-use Payum\Paymill\Action\StatusAction;
 use Payum\Core\Bridge\Spl\ArrayObject;
 use Payum\Core\GatewayFactory;
+use Payum\Paymill\Action\ConvertPaymentAction;
+use Payum\Paymill\Action\CaptureAction;
+use Payum\Paymill\Action\StatusAction;
+use Payum\Paymill\Action\TransactionAction;
 
 class PaymillGatewayFactory extends GatewayFactory
 {
@@ -22,10 +19,7 @@ class PaymillGatewayFactory extends GatewayFactory
             'payum.factory_name' => 'paymill',
             'payum.factory_title' => 'Paymill',
             'payum.action.capture' => new CaptureAction(),
-            'payum.action.authorize' => new AuthorizeAction(),
-            'payum.action.refund' => new RefundAction(),
-            'payum.action.cancel' => new CancelAction(),
-            'payum.action.notify' => new NotifyAction(),
+            'payum.action.transaction' => new TransactionAction(),
             'payum.action.status' => new StatusAction(),
             'payum.action.convert_payment' => new ConvertPaymentAction(),
         ]);
