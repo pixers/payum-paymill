@@ -53,11 +53,17 @@ class Api extends CommunicationAbstract
         $this->client = $client ?: HttpClientFactory::create();
     }
 
+    /**
+     * @return string
+     */
     public function getPrivateKey()
     {
         return $this->options['sandbox'] ? $this->options['test_private_key'] : $this->options['api_private_key'];
     }
 
+    /**
+     * @return string
+     */
     public function getPublicKey()
     {
         return $this->options['sandbox'] ? $this->options['test_public_key'] : $this->options['api_public_key'];
@@ -67,7 +73,7 @@ class Api extends CommunicationAbstract
      * Perform HTTP request to REST endpoint
      *
      * @param string $action
-     * @param array $params
+     * @param array  $params
      * @param string $method
      * @return array
      */
@@ -105,9 +111,8 @@ class Api extends CommunicationAbstract
         ];
     }
 
-
     /**
-     * @param $action
+     * @param string $action
      *
      * @return string
      */
