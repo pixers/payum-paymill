@@ -23,6 +23,12 @@
             "homepage": "https://github.com/Payum/AuthorizeNetAim/contributors"
         }
     ],
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/paymill/paymill-php"
+        }
+    ],
     "require": {
         "php": ">=5.5.0",
         "paymill/paymill": "dev-master",

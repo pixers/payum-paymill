@@ -54,13 +54,14 @@ class TransactionAction extends GatewayAwareAction implements ApiAwareInterface
                 ->setDescription($details['description'])
                 ->setToken($details['token']);
 
-            $request = new Request();
-            $request->setConnectionClass($this->api);
-            $request->create($transaction);
+            $requestPaymill = new Request();
+            $requestPaymill->setConnectionClass($this->api);
+            $requestPaymill->create($transaction);
 
-            $response = $request->getLastResponse();
+            $responsePaymill = $requestPaymill->getLastResponse();
+
             $details['http_status_code'] = 200;
-            $details['transaction'] = $response['body']['data'];
+            $details['transaction'] = $responsePaymill['body']['data'];
         } catch (PaymillException $e) {
             $details['http_status_code'] = $e->getStatusCode();
             $details['error'] = $e->getResponseCode();
