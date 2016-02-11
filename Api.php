@@ -118,6 +118,6 @@ class Api extends CommunicationAbstract
      */
     protected function getApiEndpoint($action)
     {
-        return self::API_URL . $action;
+        return self::API_URL . strtolower($action);
     }
 }
