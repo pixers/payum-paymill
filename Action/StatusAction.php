@@ -47,15 +47,18 @@ class StatusAction implements ActionInterface
             case 'open':
             case 'pending':
             case 'preauthorize':
+            case 'preauth':
                 $request->markPending();
                 break;
-            case 'close':
-                $request->markCaptured();
+            case 'closed':
+                $request->markAuthorized();
                 break;
             case 'failed':
                 $request->markFailed();
                 break;
             case 'refunded':
+            case 'partial_refunded':
+            case 'partially_refunded':
             case 'chargeback':
                 $request->markRefunded();
                 break;

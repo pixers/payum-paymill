@@ -142,7 +142,7 @@ class StatusActionTest extends GenericActionTest
     /**
      * @test
      */
-    public function shouldMarkCaptureIfStatusIsClose()
+    public function shouldMarkPendingIfStatusIsPreauth()
     {
         $action = new StatusAction();
 
@@ -150,11 +150,29 @@ class StatusActionTest extends GenericActionTest
             'http_status_code' => 200,
             'transaction' => [
                 'response_code' => 20000,
-                'status' => 'close',
+                'status' => 'preauth',
             ],
         ]));
 
-        $this->assertTrue($status->isCaptured());
+        $this->assertTrue($status->isPending());
+    }
+
+    /**
+     * @test
+     */
+    public function shouldMarkCaptureIfStatusIsClosed()
+    {
+        $action = new StatusAction();
+
+        $action->execute($status = new GetHumanStatus([
+            'http_status_code' => 200,
+            'transaction' => [
+                'response_code' => 20000,
+                'status' => 'closed',
+            ],
+        ]));
+
+        $this->assertTrue($status->isAuthorized());
     }
 
     /**
@@ -196,7 +214,7 @@ class StatusActionTest extends GenericActionTest
     /**
      * @test
      */
-    public function shouldMarkRefundedIfStatusIsChargeback()
+    public function shouldMarkRefundedIfStatusIsPartialRefunded()
     {
         $action = new StatusAction();
 
@@ -204,7 +222,25 @@ class StatusActionTest extends GenericActionTest
             'http_status_code' => 200,
             'transaction' => [
                 'response_code' => 20000,
-                'status' => 'chargeback',
+                'status' => 'partial_refunded',
+            ],
+        ]));
+
+        $this->assertTrue($status->isRefunded());
+    }
+
+    /**
+     * @test
+     */
+    public function shouldMarkRefundedIfStatusIsPartaillyRefunded()
+    {
+        $action = new StatusAction();
+
+        $action->execute($status = new GetHumanStatus([
+            'http_status_code' => 200,
+            'transaction' => [
+                'response_code' => 20000,
+                'status' => 'partially_refunded',
             ],
         ]));
 
