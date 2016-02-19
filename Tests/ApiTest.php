@@ -26,24 +26,6 @@ class ApiTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function couldBeConstructedWithOptionsAndHttpClient()
-    {
-        $client = $this->createHttpClientMock();
-
-        $api = new Api([
-            'api_private_key' => 'ApiPrivate',
-            'api_public_key' => 'ApiPublic',
-            'test_private_key' => 'TestPrivate',
-            'test_public_key' => 'TestPublic',
-            'sandbox' => true,
-        ], $client);
-
-        $this->assertAttributeSame($client, 'client', $api);
-    }
-
-    /**
-     * @test
-     */
     public function shouldImplementCommunicationAbstract()
     {
         $rc = new \ReflectionClass(Api::class);

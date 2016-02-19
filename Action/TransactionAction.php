@@ -54,8 +54,7 @@ class TransactionAction extends GatewayAwareAction implements ApiAwareInterface
                 ->setDescription($details['description'])
                 ->setToken($details['token']);
 
-            $requestPaymill = new Request();
-            $requestPaymill->setConnectionClass($this->api);
+            $requestPaymill = new Request($this->api->getPrivateKey());
             $requestPaymill->create($transaction);
 
             $responsePaymill = $requestPaymill->getLastResponse();

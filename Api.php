@@ -50,7 +50,7 @@ class Api extends CommunicationAbstract
             throw new LogicException('The boolean sandbox option must be set.');
         }
         $this->options = $options;
-        $this->client = $client ?: HttpClientFactory::create();
+        $this->client = HttpClientFactory::create();
     }
 
     /**
@@ -83,9 +83,7 @@ class Api extends CommunicationAbstract
         $request = new Request($method, $this->getApiEndpoint($action), $headers, http_build_query($params));
 
         $options = [
-            'auth' => [
-                $this->getPrivateKey(), ''
-            ],
+            'Authorization' => $this->getPrivateKey() .':',
         ];
         $response = $this->client->send($request, $options);
 
@@ -105,7 +103,7 @@ class Api extends CommunicationAbstract
         return [
             'header' => [
                 'status' => $response->getStatusCode(),
-                'reason' => null,
+                'reason' => $response->getReasonPhrase(),
             ],
             'body' => $content,
         ];
@@ -118,6 +116,6 @@ class Api extends CommunicationAbstract
      */
     protected function getApiEndpoint($action)
     {
-        return self::API_URL . strtolower($action);
+        return self::API_URL . $action;
     }
 }
