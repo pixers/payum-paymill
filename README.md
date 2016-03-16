@@ -11,7 +11,7 @@ The preferred way to install the library is using [composer](http://getcomposer.
 Run:
 
 ```bash
-php composer.phar require "netteam/payum-paymill"
+php composer.phar require "pixers/payum-paymill"
 ```
 
 ## Symfony Integration

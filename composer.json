@@ -1,5 +1,5 @@
 {
-    "name": "NetTeam/payum-paymill",
+    "name": "pixers/payum-paymill",
     "type": "library",
     "description": "Paymill gateway for Payum",
     "keywords": ["payment", "payum", "paymill"],
