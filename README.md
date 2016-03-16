@@ -1,6 +1,6 @@
 # Paymill
 
-[![Build Status](https://travis-ci.org/NetTeam/payum-paymill.png?branch=master)](https://travis-ci.org/NetTeam/payum-paymill)
+[![Build Status](https://travis-ci.org/pixers/payum-paymill.png?branch=master)](https://travis-ci.org/NetTeam/payum-paymill)
 
 The Payum extension for Paymill.
 
