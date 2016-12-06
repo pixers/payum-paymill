@@ -14,9 +14,10 @@ Run:
 php composer.phar require "pixers/payum-paymill"
 ```
 
-## Symfony Integration
+## Symfony Integration (payum-bundle < 2.0)
 
 ### Add PaymillGatewayFactory to payum:
+
 ```php
 <?php
 // src/Acme/PaymentBundle/AcmePaymentBundle.php
@@ -55,11 +56,39 @@ payum:
         ...
 ```
 
+## Symfony Integration (payum-bundle >= 2.0)
+
+### Add PaymillGatewayFactory to payum in services.yml:
+
+```yaml
+    paymill_gateway:
+        class: Payum\Core\Bridge\Symfony\Builder\GatewayFactoryBuilder
+        arguments: [Payum\Paymill\PaymillGatewayFactory]
+        tags:
+            - { name: payum.gateway_factory_builder, factory: paymill_gateway }
+```
+
+### Configuration in config.yml:
+
+```yaml
+payum:
+    gateways:
+        paymill_gateway:
+            factory: paymill
+            sandbox: true
+            api_private_key: LIVE_PRIVATE_KEY
+            api_public_key: LIVE_PUBLIC_KEY
+            test_private_key: TEST_PRIVATE_KEY
+            test_public_key: TEST_PUBLIC_KEY
+```
+
 ## Resources
 
-* [Payum Documentation](http://payum.org/doc)
+* [Payum Repository](https://github.com/Payum/Payum)
 * [Paymill Documentation](https://developers.paymill.com/)
 
 ## License
 
-Adyen plugin is released under the [BSD License](LICENSE).
+Copyright 2016 PIXERS Ltd - www.pixersize.com
+
+Licensed under the [BSD 3-Clause](LICENSE)
